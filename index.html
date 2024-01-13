@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X/0</title>
+</head>
+<style>
+    body{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+    }
+    .reset{
+        font-size: 2rem;
+        margin:1rem ;
+    }
+    h1{
+        font-size: 3rem;
+        text-align: center;
+        margin: 0;
+    }
+    .grid{
+        max-width:fit-content;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+    .gridParts{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+        border:2px solid black;
+        font-size: 5rem;
+
+    }
+</style>
+<body>
+    <h1 class="winner">🎮</h1>
+    <h1><span class="player">✖️</span>'s turn</h1>
+    <button class="reset">reset</button>
+    <div class="grid">
+        <div class="gridParts" data-pos="1" data-marked="false"></div>
+        <div class="gridParts" data-pos="2" data-marked="false"></div>
+        <div class="gridParts" data-pos="3" data-marked="false"></div>
+        <div class="gridParts" data-pos="4" data-marked="false"></div>
+        <div class="gridParts" data-pos="5" data-marked="false"></div>
+        <div class="gridParts" data-pos="6" data-marked="false"></div>
+        <div class="gridParts" data-pos="7" data-marked="false"></div>
+        <div class="gridParts" data-pos="8" data-marked="false"></div>
+        <div class="gridParts" data-pos="9" data-marked="false"></div>
+        
+    </div>
+    
+    <script>
+
+        const grid=document.querySelector('.grid')
+        const winner=document.querySelector('.winner')
+        const playerOnDom =document.querySelector('.player')
+        const reset=document.querySelector('.reset')
+        const winArr=[[1,2,3],[4,5,6],[7,8,9],[1,5,9],[3,5,7],[1,4,7],[2,5,8],[3,6,9]]
+        const moves={
+            X:[],
+            O:[]
+        }
+
+        let player='✖️'
+        let bool=true
+
+        reset.addEventListener('click',()=>{
+            location.reload()
+        })
+
+
+        const changePlayer=function(){
+            bool=!bool
+            player=bool?'✖️':'⭕'
+            playerOnDom.textContent=player
+        }
+        
+
+        const check =(arr)=>{
+            if(arr.length<3) return false
+            
+            let a=winArr.map((i)=>{
+                
+                if(arr.includes(i[0]) && arr.includes(i[1]) && arr.includes(i[2]))
+                {
+                    return true
+                    
+                }
+            })
+            
+            return a.includes(true)
+
+        }
+
+
+        grid.addEventListener('click',(e)=>{
+            if(!e.target.classList.contains('gridParts')) return
+            if(e.target.dataset.marked==='true') return 
+
+            e.target.dataset.marked='true'
+            e.target.textContent=player
+            const pos =+e.target.dataset.pos
+            let win;
+
+            if(bool) {
+                moves.X.push(pos)
+                check(moves.X) ? winner.textContent='✖️ won 🏆':'🎮'
+            }
+            else {
+                moves.O.push(pos)
+                check(moves.O) ? winner.textContent='⭕ won 🏆':'🎮'
+                
+            }
+
+            changePlayer()
+            
+
+        })
+
+    </script>
+</body>
+</html>
